@@ -1,4 +1,4 @@
-##### | [Github Repo](https://github.com/doinkythederp/repldb) |
+##### | [Github Repo](https://github.com/doinkythederp/repldb) | [NPM](https://www.npmjs.com/package/repldb) |
 # Replit Database Client
 Repldb is a **sync/async** client for the [Replit Database](https://docs.replit.com/misc/database). If you are looking for an official client, check out this: [@replit/database](https://www.npmjs.com/package/@replit/database)
 
@@ -43,7 +43,6 @@ const repldb = require('repldb');
 ```
 The exported item is the database client.
 ## Example
-Using the module to generate an error message from a template:
 ```javascript
 const Repldb = require('replit.db');
 const db = new Repldb(`https://kv.replit.com/v0/abcdefg12345678ThisIsNotARealURL`);
@@ -53,10 +52,13 @@ db.download(); // Download the database for faster operations
 db.setSync('connected', true);
 db.getSync('connected'); // true
 
-/* Someone edits the database */
+db.setSync('restarts', 1)
+
+process.exit() // After restarting, we'll have our program skip to where it left off
 
 db.getSync('connected'); // Still true
-db.getSync('connected', true) // 'Something else'
+db.getSync('restarts') // 1
+db.deleteSync('restarts') // true
 ```
 ## Info
 Links refering to the below topics will appear in the documentation to signal that they are relevant.
@@ -80,6 +82,9 @@ The module caches (stores) the values of keys when they are set or retrieved fro
 
   `repldb.get('key', true)`
 ___
+### Dependencies
+repldb has an *optional* dependency of [`sync-fetch`](https://www.npmjs.com/package/sync-fetch). If `sync-fetch` isn't installed, it will fall back and attempt to use your terminal's `curl` command.
+___
 ## Documentation
 When requiring the module, the `repldb` class will be returned. It can be used to access a database and edit it.
 ### `repldb` **Class**
@@ -91,7 +96,7 @@ new repldb()
 |------------|---------|-------------------|--------|
 | [cache](#cache-property-map) | [get](#get-method-async-cache) | [forEach](#foreach-method-cache) | [download](#download-event) |
 | [size](#size-property-number) | [set](#set-method-async-cache) | [toMap](#tomap-method) | [upload](#upload-event) |
-| [doCache](#docache-property-boolean) | [delete](#delete-method-async-cache) | [clearCache](#clearcache-method-cache) ||
+| [doCache](#docache-property-boolean) | [delete](#delete-method-async-cache) |||
 || [keys](#keys-method-async) |||
 || [entries](#entries-method-async-cache) |||
 || [values](#values-method-async-cache) |||
@@ -344,7 +349,7 @@ isOK(circular) // TypeError: Converting circular structure to JSON
 ___
 ## Version History
 
-* 0.0.0 - Pre-release
+* 1.0.0 - Release
+* 1.0.1 - General readme.md fixes
 
-##### | [Back to Top](#replit-database-client) | [Github Repo](https://github.com/doinkythederp/repldb) |
-
+##### | [Back to Top](#replit-database-client) | [Github Repo](https://github.com/doinkythederp/repldb) | [NPM](https://www.npmjs.com/package/repldb) |
