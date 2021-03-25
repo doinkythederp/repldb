@@ -1,0 +1,34 @@
+{
+  "name": "repldb",
+  "version": "1.0.0",
+  "description": "A map-like Replit DB client with support for sync and async",
+  "main": "module/index.js",
+  "scripts": {
+    "test": "node test/index.js",
+    "sync-test": "node test/sync.js"
+  },
+  "keywords": [
+    "replit",
+    "repl.it",
+    "replit-db",
+    "db",
+    "database",
+    "sync",
+    "async",
+    "in-dev"
+  ],
+  "author": "doinkythederp",
+  "license": "MIT",
+  "optionalDependencies": {
+    "sync-fetch": "^0.3.0"
+  },
+  "directories": {
+    "lib": "./module/",
+    "doc": "./readme.md",
+    "test": "./test/"
+  },
+  "exports": {
+    ".": "./module/index.js",
+    "./sync": "./module/sync.js"
+  }
+}
