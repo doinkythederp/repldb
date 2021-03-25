@@ -10,12 +10,11 @@
   "keywords": [
     "replit",
     "repl.it",
-    "replit-db",
+    "repldb",
     "db",
     "database",
     "sync",
-    "async",
-    "in-dev"
+    "async"
   ],
   "author": "doinkythederp",
   "license": "MIT",
