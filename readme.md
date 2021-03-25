@@ -1,5 +1,4 @@
-##### | [Github Repo](https://github.com/doinkythederp/templating) | [NPM](https://www.npmjs.com/package/@doinkythederp/templating) |
-
+##### | [Github Repo](https://github.com/doinkythederp/repldb) |
 # Replit Database Client
 Repldb is a **sync/async** client for the [Replit Database](https://docs.replit.com/misc/database). If you are looking for an official client, check out this: [@replit/database](https://www.npmjs.com/package/@replit/database)
 
@@ -347,5 +346,5 @@ ___
 
 * 0.0.0 - Pre-release
 
-##### | [Back to Top](#replit-database-client) | [Github Repo](https://github.com/doinkythederp/templating) | [NPM](https://www.npmjs.com/package/@doinkythederp/templating) |
+##### | [Back to Top](#replit-database-client) | [Github Repo](https://github.com/doinkythederp/repldb) |
 
