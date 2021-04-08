@@ -1,6 +1,6 @@
 {
   "name": "repldb",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "repository": "github:doinkythederp/repldb",
   "description": "A map-like Replit DB client with support for sync and async",
   "main": "module/index.js",
