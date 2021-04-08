@@ -351,5 +351,6 @@ ___
 
 * 1.0.0 - Release
 * 1.0.1 - General readme.md fixes
+* 1.0.2 - Fixed `repldb.prototype.download()` not storing raw data, and therefore fixed data being parsed twice
 
 ##### | [Back to Top](#replit-database-client) | [Github Repo](https://github.com/doinkythederp/repldb) | [NPM](https://www.npmjs.com/package/repldb) |

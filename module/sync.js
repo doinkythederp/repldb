@@ -170,7 +170,7 @@ class repldb {
   download(condition = returnTrue) {
     this.doCache = true;
     this.keys().forEach((key) => {
-      let value = this.get(key, true);
+      let value = this.get(key, true, false, true);
       if (condition(key, value)) this.cache.set(key, value);
     });
 

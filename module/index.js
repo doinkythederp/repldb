@@ -268,7 +268,7 @@ class repldb {
   downloadSync(condition = returnTrue) {
     this.doCache = true;
     this.keysSync().forEach((key) => {
-      let value = this.getSync(key, true);
+      let value = this.getSync(key, true, false, true);
       if (condition(key, value)) this.cache.set(key, value);
     });
 
@@ -278,7 +278,7 @@ class repldb {
   async download(condition = returnTrue) {
     this.doCache = true;
     (await this.keys()).forEach((key, index) => {
-      let value = this.getSync(key, true);
+      let value = this.getSync(key, true, false, true);
       if (condition(key, value, index)) this.cache.set(key, value);
     });
 
