@@ -21,7 +21,7 @@
   "author": "doinkythederp",
   "license": "MIT",
   "peerDependencies": {
-    "sync-fetch": "0.x"
+    "sync-fetch": "^0.3.0"
   },
   "directories": {
     "lib": "./module/",
