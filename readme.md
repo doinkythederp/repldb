@@ -328,6 +328,13 @@ ___
 ### `safeValue` **Any**
 One of several types that can be stored in JSON format.
 See [JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse) and [JSON.stringify](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify).
+
+Possible types:
+- `null`
+- `string`
+- `number`
+- `safeValue[]`
+- `Object<string, safeValue>`
 ```js
 // Safe objects can be stringified, then parsed, and stay the same
 function isOK(input) {
@@ -352,5 +359,6 @@ ___
 * 1.0.0 - Release
 * 1.0.1 - General readme.md fixes
 * 1.0.2 - Fixed `repldb.prototype.download()` not storing raw data, and therefore fixed data being parsed twice
+* 1.1.0 - Added type declarations. Repldb now throws on expired token.
 
 ##### | [Back to Top](#replit-database-client) | [Github Repo](https://github.com/doinkythederp/repldb) | [NPM](https://www.npmjs.com/package/repldb) |
