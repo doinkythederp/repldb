@@ -7,6 +7,12 @@ try {
   var syncFetch = null;
 }
 
+class InvalidTokenError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "InvalidTokenError";
+  }
+}
 
 class repldb {
   constructor(customURL, doCache = true) {
@@ -33,6 +39,8 @@ class repldb {
   on = this.events.on;
 
   off = this.events.off;
+
+  once = this.events.once;
 
   // Base functionality
 
@@ -231,11 +239,11 @@ class repldb {
 
   // Check if a key exists
   hasSync(key, force, cache) {
-    return !!(this.getSync(key, force, cache));
+    return this.getSync(key, force, cache) !== undefined;
   }
 
   async has(key, force, cache) {
-    return !!(await this.get(key, force, cache));
+    return await this.get(key, force, cache) !== undefined;
   }
 
   // Delete all keys
@@ -267,9 +275,9 @@ class repldb {
   // Download all values to the cache
   downloadSync(condition = returnTrue) {
     this.doCache = true;
-    this.keysSync().forEach((key) => {
-      let value = this.getSync(key, true, false, true);
-      if (condition(key, value)) this.cache.set(key, value);
+    this.keysSync().forEach((key, index) => {
+      let value = this.getSync(key, true);
+      if (condition(key, value, index)) this.cache.set(key, value);
     });
 
     return this;
@@ -278,7 +286,7 @@ class repldb {
   async download(condition = returnTrue) {
     this.doCache = true;
     (await this.keys()).forEach((key, index) => {
-      let value = this.getSync(key, true, false, true);
+      let value = this.getSync(key, true);
       if (condition(key, value, index)) this.cache.set(key, value);
     });
 
@@ -296,6 +304,7 @@ class repldb {
       let value;
       if (force || !this.client.cache.has(key)) {
         value = fetchSync(`${this.client.url}/${key}`);
+        if (value.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(value.substr(15));
         if (cache) this.client.cache.set(key, value);
         this.client.events.emit('download', key, value);
         return value;
@@ -308,16 +317,19 @@ class repldb {
 
       postSync(url, `${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
       if (cache) this.client.cache.set(key, value);
-      this.client.events.emit('upload', key, value);
+      let output = this.client.events.emit('upload', key, value);
+      if (output.startsWith("invalid token:")) throw new InvalidTokenError(output.substr(15));
     },
     "keysSync": function keysSync() {
       let keys = fetchSync(`${this.client.url}?encode=true&prefix`);
+      if (keys.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(keys.substr(15));
 
       return decodeURIComponent(keys).split('\n');
     },
     "deleteSync": function delSync(key) {
         if (this.getSync(key, true)) {
-          removeSync(`${this.client.url}/${key}`);
+          let value = removeSync(`${this.client.url}/${key}`);
+          if (value.startsWith("invalid token:")) throw new InvalidTokenError(value.substr(15));
           this.client.events.emit('delete', key);
           this.client.cache.delete(key);
           return true;
@@ -326,6 +338,7 @@ class repldb {
     "get": async function get(key, force, cache) {
       if (force || !this.client.cache.has(key)) {
         return await fetch(`${this.client.url}/${key}`).then((value) => {
+          if (value.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(value.substr(15));
           if (cache) this.client.cache.set(key, value);
           this.client.events.emit('download', key, value);
           return value;
@@ -335,7 +348,8 @@ class repldb {
       }
     },
     "set": async function set(key, value, cache) {
-      post(this.client.url, `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).then(() => {
+      post(this.client.url, `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).then((output) => {
+        if (output.startsWith("invalid token:")) throw new InvalidTokenError(output.substr(15));
         if (cache) this.client.cache.set(key, value);
         this.client.events.emit('upload', key, value);
         return;
@@ -343,12 +357,14 @@ class repldb {
     },
     "keys": async function keys() {
       return await fetch(`${this.client.url}?encode=true&prefix`).then((keys) => {
+        if (keys.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(keys.substr(15));
         return decodeURIComponent(keys).split('\n');
       });
     },
     "delete": async function del(key) {
       if (await this.get(key, true)) {
-        await remove(`${this.client.url}/${key}`);
+        let value = await remove(`${this.client.url}/${key}`);
+        if (value.startsWith("invalid token:")) throw new InvalidTokenError(value.substr(15));
         this.client.events.emit('delete', key);
         this.client.cache.delete(key);
         return true;

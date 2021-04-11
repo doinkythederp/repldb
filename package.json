@@ -1,9 +1,9 @@
 {
   "name": "repldb",
-  "version": "1.0.2",
-  "repository": "github:doinkythederp/repldb",
+  "version": "1.1.0",
   "description": "A map-like Replit DB client with support for sync and async",
   "main": "module/index.js",
+  "types": "module/index.d.ts",
   "scripts": {
     "test": "node test/index.js",
     "sync-test": "node test/sync.js"
@@ -11,16 +11,17 @@
   "keywords": [
     "replit",
     "repl.it",
-    "repldb",
+    "replit-db",
     "db",
     "database",
     "sync",
-    "async"
+    "async",
+    "in-dev"
   ],
   "author": "doinkythederp",
   "license": "MIT",
-  "optionalDependencies": {
-    "sync-fetch": "^0.3.0"
+  "peerDependencies": {
+    "sync-fetch": "0.x"
   },
   "directories": {
     "lib": "./module/",
@@ -30,5 +31,8 @@
   "exports": {
     ".": "./module/index.js",
     "./sync": "./module/sync.js"
+  },
+  "dependencies": {
+    "@types/node": "^14.14.37"
   }
 }

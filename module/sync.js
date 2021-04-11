@@ -6,8 +6,14 @@ try {
   var syncFetch = null;
 }
 
+class InvalidTokenError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "InvalidTokenError";
+  }
+}
 
-class repldb {
+class repldbSync {
   constructor(customURL, doCache = true) {
     this.cache = new Map();
     this.api.client = this;
@@ -170,7 +176,7 @@ class repldb {
   download(condition = returnTrue) {
     this.doCache = true;
     this.keys().forEach((key) => {
-      let value = this.get(key, true, false, true);
+      let value = this.get(key, true);
       if (condition(key, value)) this.cache.set(key, value);
     });
 
@@ -188,6 +194,7 @@ class repldb {
       let value;
       if (force || !this.client.cache.has(key)) {
         value = fetchSync(`${this.client.url}/${key}`);
+        if (value.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(value.substr(15));
         if (cache) this.client.cache.set(key, value);
         this.client.events.emit('download', key, value);
         return value;
@@ -198,18 +205,21 @@ class repldb {
     "set": function set(key, value, cache) {
       let url = this.client.url;
 
-      postSync(url, `${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+      let output = postSync(url, `${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+      if (output.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(output.substr(15));
       if (cache) this.client.cache.set(key, value);
       this.client.events.emit('upload', key, value);
     },
     "keys": function keys() {
       let keys = fetchSync(`${this.client.url}?encode=true&prefix`);
+      if (keys.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(keys.substr(15));
 
       return decodeURIComponent(keys).split('\n');
     },
     "delete": function del(key) {
         if (this.get(key, true)) {
-          removeSync(`${this.client.url}/${key}`);
+          let value = removeSync(`${this.client.url}/${key}`);
+          if (value.startsWith("invalid token: token is expired by")) throw new InvalidTokenError(value.substr(15));
           this.client.events.emit('delete', key);
           this.client.cache.delete(key);
           return true;
@@ -218,7 +228,7 @@ class repldb {
   }
 }
 
-module.exports = repldb;
+module.exports = repldbSync;
 
 // This is for checking each value to ensure it
 // is of the correct type.
