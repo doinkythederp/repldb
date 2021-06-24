@@ -44,7 +44,7 @@ const repldb = require('repldb');
 The exported item is the database client.
 ## Example
 ```javascript
-const Repldb = require('replit.db');
+const Repldb = require('repldb');
 const db = new Repldb(`https://kv.replit.com/v0/abcdefg12345678ThisIsNotARealURL`);
 // Example is not a repl, so we need the URL
 
